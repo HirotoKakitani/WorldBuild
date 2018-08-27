@@ -1,4 +1,3 @@
-import Window as w
 import Tkinter as tk
 
 #inheriting from tkinter
@@ -14,16 +13,10 @@ class WorldBuild(tk.Tk):
         self.frames={}   #dictionary of pages
     
         #initialize different page types
-        startFrame = StartPage(container, self)
-        mapFrame = MapPage(container, self)
-        infoFrame = InfoPage(container,self)
-        diagramFrame= DiagramPage(container, self)
-        self.frames[StartPage] = startFrame
-        self.frames[MapPage] = mapFrame
-        self.frames[InfoPage] = infoFrame
-        self.frames[DiagramPage] = diagramFrame
-    
-        startFrame.grid(row=0, column=0, sticky="nsew")
+        for f in (StartPage, MapPage, InfoPage, DiagramPage):
+            frame = f(container, self)
+            self.frames[f] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
         
         self.showFrame(StartPage)
     
@@ -34,38 +27,29 @@ class WorldBuild(tk.Tk):
 
 class StartPage(tk.Frame):
     def __init__(self, parent,controller):
-        self.controller = controller    #TODO might not need this??
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Start page")
         label.pack(pady=10,padx=10)
         
         #initialize buttons - lambda expressions used to differentiate button callbacks
-        mapButton = tk.Button(self, text="Map",command=lambda:self.callback("map"))
+        mapButton = tk.Button(self, text="Map",command=lambda:controller.showFrame(MapPage))
         mapButton.pack(pady=10,padx=10)
         
-        infoButton = tk.Button(self, text="Info",command=lambda:self.callback("info"))
+        infoButton = tk.Button(self, text="Info",command=lambda:controller.showFrame(InfoPage))
         infoButton.pack(pady=10,padx=10)
         
-        diagramButton = tk.Button(self, text="Diagram",command=lambda:self.callback("diagram"))
+        diagramButton = tk.Button(self, text="Diagram",command=lambda:controller.showFrame(DiagramPage))
         diagramButton.pack(pady=10,padx=10)
        
-    #goes to appropriate page based on which button is pressed 
-    def callback(self, buttonType):
-        if buttonType == "map":
-            print self.controller.frames    #TODO look into  why showFrame is not working 
-#            self.controller.showFrame(MapPage)
-            print "Going to map page"
-        elif buttonType == "info":
-            print "Going to info page"
-        else:
-            print "Going to diagram page"
-
 class MapPage(tk.Frame): 
     def __init__(self, parent,controller): 
         tk.Frame.__init__(self, parent)
         label = tk.Label(self,text="Map Page")
         label.pack(pady=10,padx=10)
         self.mapFrame = {}   #dict for all pages within map frames
+
+        testButton = tk.Button(self, text="testt")
+        testButton.pack(pady=10,padx=10)
 
 class InfoPage(tk.Frame):
     def __init__(self, parent,controller):
