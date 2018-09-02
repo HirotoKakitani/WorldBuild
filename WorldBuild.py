@@ -10,43 +10,58 @@ DIAG = "Diagram Page"
 class WorldBuild(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        container = tk.Frame(self)
+        self.container = tk.Frame(self)
         
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.container.pack(side="top", fill="both", expand=True)
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
 
         self.frames={}   #dictionary of pages
-    
+        self.mapFrames={}
+        self.infoFrames={}
+        self.diagFrames={}
+ 
         #initialize different page types
         for f,t in zip((StartPage, SelectPage, SelectPage, SelectPage),(START,MAP,INFO,DIAG)):
-            frame = f(container, self) if f==StartPage else f(container, self, t)
+            frame = f(self.container, self) if f==StartPage else f(self.container, self, t)
             self.frames[t] = frame
             frame.grid(row=0, column=0, sticky="nsew")
         
         self.showFrame(START)
-    
-    #gets appropriate frame from dictionary
-    def showFrame(self, cont):
+   
+    def showFrame(self,cont):
         frame = self.frames[cont]
         frame.tkraise()
+        print "showing:", cont
 
-    #creates a new page
+    #creates a new entry under correct page
     def createEntry(self, cont, pageType, pageNum):
         if pageType == MAP:
-            newFrame = MapPage(tk.Frame(self),self)
-            cont.typeFrames[pageNum] = newFrame
-            newFrame.grid(row=0,column=0,sticky="nsew") #TODO this might be causing not raising entries
+            print "Creating Map Entry"
+            newFrame = MapPage(self.container,self)
+            self.frames[pageNum] = newFrame
+            newFrame.grid(row=0,column=0,sticky="nsew")
             cont.num += 1
-            print cont.typeFrames
+            print self.frames
             cont.updateButtons()
+
         elif pageType == INFO:
-            #TODO copy above 
-            pass
+            print "Creating Info Entry"
+            newFrame = InfoPage(self.container,self)
+            self.frames[pageNum] = newFrame
+            newFrame.grid(row=0,column=0,sticky="nsew")
+            cont.num += 1
+            print self.frames
+            cont.updateButtons()
+
         else:
-            #TODO copy above
-            pass
-        return 
+            print "Creating Diagram Entry"
+            newFrame = DiagramPage(self.container,self)
+            self.frames[pageNum] = newFrame
+            newFrame.grid(row=0,column=0,sticky="nsew")
+            cont.num += 1
+            print self.frames
+            cont.updateButtons()
 
 class StartPage(tk.Frame):
     def __init__(self, parent,controller):
@@ -66,10 +81,11 @@ class StartPage(tk.Frame):
     
 class SelectPage(tk.Frame):
     def __init__(self,parent,controller,pageType):
+        self.pageType = pageType
+        self.controller = controller
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text=pageType)
         label.pack(pady=10,padx=10)
-        self.typeFrames = {}
         backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(START))
         backButton.pack(pady=10,padx=10)
         
@@ -79,22 +95,16 @@ class SelectPage(tk.Frame):
 
     #create a new button/element for the new entry        
     def updateButtons(self):
-        selButton = tk.Button(self, text=self.num-1, command=lambda:self.showEntry(self.num-1))
+        selButton = tk.Button(self, text=self.num-1, command=lambda:self.controller.showFrame(self.num-1))
         selButton.pack(pady=10,padx=10)
 
-    #TODO issue: not raising entries
-    def showEntry(self, cont):
-        frame = self.typeFrames[cont]
-        frame.tkraise()
-        
 class MapPage(tk.Frame): 
     def __init__(self, parent,controller): 
         tk.Frame.__init__(self, parent)
         label = tk.Label(self,text="Map Entry")
         label.pack(pady=10,padx=10)
-        self.mapFrame = {}   #dict for all pages within map frames
         
-        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(START))
+        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(MAP))
         backButton.pack(pady=10,padx=10)
 
 class InfoPage(tk.Frame):
