@@ -1,5 +1,7 @@
 import Tkinter as tk
-
+from MapPage import MapPage
+from InfoPage import InfoPage
+from DiagramPage import DiagramPage
 START = "Start Page"
 SELECT = "Select Page"
 MAP = "Map Page"
@@ -97,36 +99,6 @@ class SelectPage(tk.Frame):
     def updateButtons(self):
         selButton = tk.Button(self, text=self.num-1, command=lambda:self.controller.showFrame(self.num-1))
         selButton.pack(pady=10,padx=10)
-
-class MapPage(tk.Frame): 
-    def __init__(self, parent,controller): 
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self,text="Map Entry")
-        label.pack(pady=10,padx=10)
-        
-        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(MAP))
-        backButton.pack(pady=10,padx=10)
-
-class InfoPage(tk.Frame):
-    def __init__(self, parent,controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self,text="Info Entry")
-        label.pack(pady=10,padx=10)
-        self.infoFrame={}   #dict for all pages within info frames
-        
-        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(START))
-        backButton.pack(pady=10,padx=10)
-
-
-class DiagramPage(tk.Frame):
-    def __init__(self, parent,controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self,text="Diagram Entry")
-        label.pack(pady=10,padx=10)
-        self.diagramFrame={}    #dict for all pages within diagram frames
-        
-        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(START))
-        backButton.pack(pady=10,padx=10)
 
 app = WorldBuild()
 app.mainloop()
