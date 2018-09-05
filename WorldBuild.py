@@ -1,4 +1,5 @@
-import Tkinter as tk
+#import Tkinter as tk
+from Tkinter import *
 from MapPage import MapPage
 from InfoPage import InfoPage
 from DiagramPage import DiagramPage
@@ -9,11 +10,11 @@ INFO = "Info Page"
 DIAG = "Diagram Page"
 
 #inheriting from tkinter
-class WorldBuild(tk.Tk):
+class WorldBuild(Tk):
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-        self.container = tk.Frame(self)
-        tk.Tk.geometry(self,"500x500")  #TODO check resizing
+        Tk.__init__(self, *args, **kwargs)
+        self.container = Frame(self)
+        Tk.geometry(self,"500x500")  #TODO check resizing
         self.container.pack_propagate(0)
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
@@ -66,38 +67,38 @@ class WorldBuild(tk.Tk):
             cont.createButton()
 
 
-class StartPage(tk.Frame):
+class StartPage(Frame):
     def __init__(self, parent,controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Start page")
+        Frame.__init__(self, parent)
+        label = Label(self, text="Start page")
         label.pack(pady=10,padx=10)
         
         #initialize buttons - lambda expressions used to differentiate button callbacks
-        mapButton = tk.Button(self, text="Map",command=lambda:controller.showFrame(MAP))
-        mapButton.pack(pady=10,padx=10)
+        mapButton = Button(self, text="Map",command=lambda:controller.showFrame(MAP))
+        mapButton.pack(side=LEFT,fill=BOTH,expand=True,pady=10,padx=10)
         
-        infoButton = tk.Button(self, text="Info",command=lambda:controller.showFrame(INFO))
-        infoButton.pack(pady=10,padx=10)
+        infoButton = Button(self, text="Info",command=lambda:controller.showFrame(INFO))
+        infoButton.pack(side=LEFT,fill=BOTH,expand=True,pady=10,padx=10)
         
-        diagramButton = tk.Button(self, text="Diagram",command=lambda:controller.showFrame(DIAG))
-        diagramButton.pack(pady=10,padx=10)
+        diagramButton = Button(self, text="Diagram",command=lambda:controller.showFrame(DIAG))
+        diagramButton.pack(side=LEFT,fill=BOTH,expand=True,pady=10,padx=10)
     
 
-class SelectPage(tk.Frame):
+class SelectPage(Frame):
     def __init__(self,parent,controller,pageType):
         self.pageType = pageType
         self.controller = controller
         self.elementList = [] 
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text=pageType)
+        Frame.__init__(self, parent)
+        label = Label(self, text=pageType)
         label.pack(pady=10,padx=10) 
         #label.grid(row=0,column=1,sticky="nsew")
-        backButton = tk.Button(self, text="Back", command=lambda:controller.showFrame(START))
+        backButton = Button(self, text="Back", command=lambda:controller.showFrame(START))
         backButton.pack(pady=10,padx=10)
         #backButton.grid(row=1,column=0,sticky="nsew")
         
         self.num = 0
-        newButton = tk.Button(self,text="New Entry",command=lambda:controller.createEntry(self,pageType,self.num))
+        newButton = Button(self,text="New Entry",command=lambda:controller.createEntry(self,pageType,self.num))
         newButton.pack(pady=10,padx=10)
         
         #newButton.grid(row=1,column=1,sticky="nsew")
@@ -105,7 +106,7 @@ class SelectPage(tk.Frame):
     #create a new button/element for the new entry        
     def createButton(self,pageTitle, newEntry, pageType):
         self.controller.frames[pageTitle] = newEntry 
-        selButton = tk.Button(self, text=pageTitle, command=lambda:self.controller.showFrame(pageTitle))
+        selButton = Button(self, text=pageTitle, command=lambda:self.controller.showFrame(pageTitle))
         selButton.pack(pady=10,padx=10)
         self.elementList.append(selButton)
     
