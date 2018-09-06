@@ -111,11 +111,14 @@ class SelectPage(Frame):
         self.elementList.append(selButton)
     
     def updateButton(self, oldName, newName):
-        #TODO iterate through buttons to find the one with old name. then change the name
+        #iterate through buttons to find the one with old name. then change the name
         for i in self.elementList:
             print i['text']
             if i['text'] == oldName:
                 i['text']=newName
+                break
+        #changes key name in frame dictionary
+        self.controller.frames[newName] = self.controller.frames.pop(oldName)  
                 
 app = WorldBuild()
 app.mainloop()
