@@ -14,7 +14,7 @@ class WorldBuild(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.container = Frame(self)
-        Tk.geometry(self,"500x500")  #TODO check resizing
+        Tk.geometry(self,"1500x1000")  #TODO check resizing
         self.container.pack_propagate(0)
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
@@ -105,6 +105,8 @@ class SelectPage(Frame):
         
     #create a new button/element for the new entry        
     def createButton(self,pageTitle, newEntry, pageType):
+        #TODO change dict key to include page type/ 
+        #self.controller.frames[pageTitle+"_"+pageType] = newEntry 
         self.controller.frames[pageTitle] = newEntry 
         selButton = Button(self, text=pageTitle, command=lambda:self.controller.showFrame(pageTitle))
         selButton.pack(pady=10,padx=10)
