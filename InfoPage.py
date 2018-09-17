@@ -13,7 +13,8 @@ class InfoPage(Frame):
         self.title = Entry(self, disabledforeground="black")
         self.title.grid(row=1,column=4, columnspan=1)
         self.title.config(state=DISABLED)
-        self.backButton = Button(self, text="Back", command=lambda:controller.showFrame(INFO))
+
+        self.backButton = Button(self, text="Back", command=self.returnPage)
         self.backButton.grid(row=0,column=0, sticky="nw")
         
         self.editButton = Button(self, text="Edit", command=self.edit)
@@ -44,23 +45,40 @@ class InfoPage(Frame):
 
         self.grid_columnconfigure(4, weight=1)
         
-        #TODO testing tree view
         self.tree = ttk.Treeview(self)      
 
-        
-    #TODO show titles of all frames
+    #TODO show previous frame accessed. for now, just go back to select page of page type
+    def returnPage(self):
+        #disable edit functions
+        self.saveButton['state']='disabled'
+        self.linkButton['state']='disabled'
+        self.textArea.config(state=DISABLED)
+        self.title.config(state=DISABLED)
+        self.tree.grid_remove()
+        self.controller.showFrame(INFO)
+    
+    #TODO when item is selected, create a new button in page that will redirect to that frame
     def link(self):
         #1. get all frames excepy select pages and start page
         #2. place under correct entry
+        self.tree.insert("","end", iid="DIAG", text="Diagrams")
+        self.tree.insert("","end", iid="MAP", text= "Maps")
+        self.tree.insert("","end", iid="INFO", text= "Info")
+        
         for i in self.controller.frames:
             print i
-            if i == "Diagram Page":
-                self.tree.insert("","end", iid="DIAG", text="Diagrams")
-            elif i == "Map Page":
-                self.tree.insert("","end", iid="MAP", text= "Maps")
-            elif i == "Info Page":
-                self.tree.insert("","end", iid="INFO", text= "Info")
-
+            if "_Info Page" in i:
+                treeText = i.replace("_Info Page", "")
+                self.tree.insert("INFO","end", iid=treeText, text= treeText)
+            elif "_Map Page" in i:
+                treeText = i.replace("_Map Page", "")
+                self.tree.insert("MAP","end", iid=treeText, text= treeText)
+            elif "_Diagram Page" in i:
+                treeText = i.replace("_Diagram Page", "")
+                self.tree.insert("DIAG","end", iid=treeText, text= treeText)          
+            else:
+                print i + " not found!"
+            
         self.tree.grid(row=2,rowspan=3,column=0,columnspan=4)
         
     #activates text entry areas

@@ -49,8 +49,6 @@ class WorldBuild(Tk):
         elif pageType == INFO:
             print "Creating Info Entry"
             newFrame = InfoPage(self.container,self,cont)
-            #newFrame = InfoPage(cont,self)
-            #self.frames[pageNum] = newFrame
             newFrame.grid(row=0,column=0,sticky="nsew")
             cont.num += 1
             #TODO experimental end
@@ -106,9 +104,9 @@ class SelectPage(Frame):
     #create a new button/element for the new entry        
     def createButton(self,pageTitle, newEntry, pageType):
         #TODO change dict key to include page type/ 
-        #self.controller.frames[pageTitle+"_"+pageType] = newEntry 
-        self.controller.frames[pageTitle] = newEntry 
-        selButton = Button(self, text=pageTitle, command=lambda:self.controller.showFrame(pageTitle))
+        self.controller.frames[pageTitle+"_"+pageType] = newEntry 
+        #self.controller.frames[pageTitle] = newEntry 
+        selButton = Button(self, text=pageTitle, command=lambda:self.controller.showFrame(pageTitle+"_"+pageType))
         selButton.pack(pady=10,padx=10)
         self.elementList.append(selButton)
     
