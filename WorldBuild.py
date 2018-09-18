@@ -15,6 +15,7 @@ class WorldBuild(Tk):
         Tk.__init__(self, *args, **kwargs)
         self.container = Frame(self)
         Tk.geometry(self,"1500x1000")  #TODO check resizing
+        Tk.state(self,'zoomed')
         self.container.pack_propagate(0)
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
@@ -50,6 +51,7 @@ class WorldBuild(Tk):
             print "Creating Info Entry"
             newFrame = InfoPage(self.container,self,cont)
             newFrame.grid(row=0,column=0,sticky="nsew")
+            #newFrame.grid(row=0,column=0)
             cont.num += 1
             #TODO experimental end
             print self.frames

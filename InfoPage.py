@@ -12,33 +12,30 @@ class InfoPage(Frame):
         self.referenceList = []
         
         #TODO menu frame
-        self.menuFrame=Frame(parent,highlightbackground="green", highlightthickness=1)
-        self.menuFrame.grid(row=0,column=1)
+        self.menuFrame=Frame(self,highlightbackground="green", highlightthickness=1)
+        self.menuFrame.grid(row=0,column=0, sticky="nw")
+
         
         #TODO content frame
-        self.contentFrame=Frame(parent,highlightbackground="green",highlightthickness=1)
-        self.contentFrame.grid(row=1,column=1)
-
+        self.contentFrame=Frame(self,highlightbackground="green",highlightthickness=1)
+        self.contentFrame.grid(row=1,column=1, sticky="nesw")
         
+        #TODO image frame
+        self.imageFrame=Frame(self, highlightbackground="green",highlightthickness=1)
+        self.imageFrame.grid(row=1,column=0,sticky="nesw")
+        imageLabel = Label(self.imageFrame, text="image frame")
+        imageLabel.pack()
         self.backButton = Button(self.menuFrame, text="Back", command=self.returnPage)   
-        self.backButton.pack(side="top", fill="both", expand=True)
-        #self.backButton = Button(self, text="Back", command=self.returnPage)
-        #self.backButton.grid(row=0,column=0, sticky="nw")
+        self.backButton.pack(side=LEFT)
         
         self.editButton = Button(self.menuFrame, text="Edit", command=self.edit)   
-        self.editButton.pack()
-        #self.editButton = Button(self, text="Edit", command=self.edit)
-        #self.editButton.grid(row=0,column=1, sticky="nw")
+        self.editButton.pack(side=LEFT)
 
         self.saveButton = Button(self.menuFrame, text="Save", command=self.save, state=DISABLED)   
-        self.saveButton.pack()
-        #self.saveButton = Button(self,text="Save", command=self.save, state=DISABLED)
-        #self.saveButton.grid(row=0,column=2, sticky="nw")
+        self.saveButton.pack(side=LEFT)
         
         self.linkButton = Button(self.menuFrame, text="Link", command=self.link, state=DISABLED)   
-        self.linkButton.pack()
-        #self.linkButton = Button(self, text="Link", command=self.link, state=DISABLED)
-        #self.linkButton.grid(row=0,column=3, sticky="nw")
+        self.linkButton.pack(side=LEFT)
 
         #TODO-=-= image insertion test
         #photo=PhotoImage(file='testimg.gif')
@@ -49,17 +46,11 @@ class InfoPage(Frame):
         
         self.title=Entry(self.contentFrame,disabledforeground="black",state=DISABLED)
         self.title.pack()
-        #self.title = Entry(self, disabledforeground="black",state=DISABLED)
-        #self.title.grid(row=1,column=4, columnspan=1)
         self.textArea=Text(self.contentFrame)  
         self.scrollbar=Scrollbar(self.contentFrame)
 
-        self.textArea.pack()
-        self.scrollbar.pack()
-        #self.scrollbar = Scrollbar(self)
-        #self.textArea = Text(self)
-        #self.textArea.grid(row=3,rowspan=1, column=4,columnspan=1, sticky="ns") 
-        #self.scrollbar.grid(row=3, column=4, sticky="nse")
+        self.textArea.pack(side=LEFT, fill=Y)
+        self.scrollbar.pack(side=LEFT, fill=Y)
         self.scrollbar.config(command=self.textArea.yview)
         self.textArea.config(yscrollcommand=self.scrollbar.set)
         self.textArea.insert(END,"testing text widget\nhello thgis is a new line\nwaaaaaaah\nhello")
@@ -71,10 +62,11 @@ class InfoPage(Frame):
         self.tree.bind("<Double-1>", self.onTreeClick)
         
         #TODO testing embedded frame
-        self.referenceFrame = Frame(parent, width=200, height=600, highlightbackground="green", highlightthickness=1)
-        self.referenceFrame.grid(row=1, column=0)
+        self.referenceFrame = Frame(self, width=200, height=600, highlightbackground="green", highlightthickness=1)
+        self.referenceFrame.grid(row=1, column=3)
         self.refTestbutton = Button(self.referenceFrame, text="test")
-        #self.refTestbutton.grid(row=0,column=0)
+        self.refTestbutton.pack()
+        
     #TODO show previous frame accessed. for now, just go back to select page of page type
     def returnPage(self):
         #disable edit functions
