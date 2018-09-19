@@ -14,17 +14,6 @@ class InfoPage(Frame):
         #TODO menu frame
         self.menuFrame=Frame(self,highlightbackground="green", highlightthickness=1)
         self.menuFrame.grid(row=0,column=0, sticky="nw")
-
-        
-        #TODO content frame
-        self.contentFrame=Frame(self,highlightbackground="green",highlightthickness=1)
-        self.contentFrame.grid(row=1,column=1, sticky="nesw")
-        
-        #TODO image frame
-        self.imageFrame=Frame(self, highlightbackground="green",highlightthickness=1)
-        self.imageFrame.grid(row=1,column=0,sticky="nesw")
-        imageLabel = Label(self.imageFrame, text="image frame")
-        imageLabel.pack()
         self.backButton = Button(self.menuFrame, text="Back", command=self.returnPage)   
         self.backButton.pack(side=LEFT)
         
@@ -36,13 +25,13 @@ class InfoPage(Frame):
         
         self.linkButton = Button(self.menuFrame, text="Link", command=self.link, state=DISABLED)   
         self.linkButton.pack(side=LEFT)
-
-        #TODO-=-= image insertion test
-        #photo=PhotoImage(file='testimg.gif')
-        #self.textP = Text(root, height=20,width=20)
-        #self.textP.insert(END,'\n')
-        #self.textP.image_create(END,image=photo)
-        #self.textP.pack()
+        
+        self.tree = ttk.Treeview(self)      
+        self.tree.bind("<Double-1>", self.onTreeClick)
+        
+        #TODO content frame
+        self.contentFrame=Frame(self,highlightbackground="green",highlightthickness=1)
+        self.contentFrame.grid(row=1,column=1, sticky="nesw")
         
         self.title=Entry(self.contentFrame,disabledforeground="black",state=DISABLED)
         self.title.pack()
@@ -56,16 +45,41 @@ class InfoPage(Frame):
         self.textArea.insert(END,"testing text widget\nhello thgis is a new line\nwaaaaaaah\nhello")
         self.textArea.config(state=DISABLED)
         
+        #TODO image frame
+        self.imageFrame=Frame(self, highlightbackground="green",highlightthickness=1)
+        self.imageFrame.grid(row=1,column=0,sticky="nesw")
+        imageLabel = Label(self.imageFrame, text="image frame")
+        imageLabel.pack()
+        
+      
+
+        #TODO-=-= image insertion test
+        #photo=PhotoImage(file='testimg.gif')
+        #self.textP = Text(root, height=20,width=20)
+        #self.textP.insert(END,'\n')
+        #self.textP.image_create(END,image=photo)
+        #self.textP.pack()
+        
+        #TODO reference frame
+        self.referenceFrame = Frame(self, width=200, height=500, highlightbackground="green", highlightthickness=1)
+        self.referenceFrame.grid(row=1, column=3, sticky="nse")
+        self.referenceFrame.pack_propagate(False)
+        self.innerText = Text(self.referenceFrame,width=100, height=500)
+        self.refScroll = Scrollbar(self.referenceFrame, command=self.innerText.yview)
+        self.innerText.configure(yscrollcommand=self.refScroll.set)
+        self.innerText.pack(side=LEFT)
+        #self.innerText.pack(side=LEFT, expand=YES, fill=BOTH)
+        self.refScroll.pack(side=RIGHT, fill=Y)
+        self.refScroll.config(command=self.innerText.yview)
+        for i in range(0,100):
+            b = Button(self.referenceFrame, text="button %d" % i)
+            self.innerText.window_create("end", window=b)
+            #self.innerText.insert("end", "\n")
+        self.innerText.configure(state="disabled")       
+        
         #self.grid_columnconfigure(4, weight=1)
-        
-        self.tree = ttk.Treeview(self)      
-        self.tree.bind("<Double-1>", self.onTreeClick)
-        
-        #TODO testing embedded frame
-        self.referenceFrame = Frame(self, width=200, height=600, highlightbackground="green", highlightthickness=1)
-        self.referenceFrame.grid(row=1, column=3)
-        self.refTestbutton = Button(self.referenceFrame, text="test")
-        self.refTestbutton.pack()
+        #self.refTestbutton = Button(self.referenceFrame, text="test")
+        #self.refTestbutton.pack()
         
     #TODO show previous frame accessed. for now, just go back to select page of page type
     def returnPage(self):
