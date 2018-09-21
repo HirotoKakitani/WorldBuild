@@ -1,4 +1,3 @@
-#import Tkinter as tk
 from Tkinter import *
 import ttk
 
@@ -10,8 +9,8 @@ class InfoPage(Frame):
         self.prevSelect = prevSelect    #points to the selection page this entry came from
         self.nameHistory = []
         self.referenceList = []
-        
-        #TODO menu frame
+        self.tree = None #TREE
+        #menu frame
         self.menuFrame=Frame(self,highlightbackground="green", highlightthickness=1)
         self.menuFrame.grid(row=0,column=0, sticky="nw")
         self.backButton = Button(self.menuFrame, text="Back", command=self.returnPage)   
@@ -26,10 +25,7 @@ class InfoPage(Frame):
         self.linkButton = Button(self.menuFrame, text="Link", command=self.link, state=DISABLED)   
         self.linkButton.pack(side=LEFT)
         
-        self.tree = ttk.Treeview(self)      
-        self.tree.bind("<Double-1>", self.onTreeClick)
-        
-        #TODO content frame
+        #content frame
         self.contentFrame=Frame(self,highlightbackground="green",highlightthickness=1)
         self.contentFrame.grid(row=1,column=1, sticky="nesw")
         
@@ -50,9 +46,8 @@ class InfoPage(Frame):
         self.imageFrame.grid(row=1,column=0,sticky="nesw")
         imageLabel = Label(self.imageFrame, text="image frame")
         imageLabel.pack()
-        
-      
 
+        
         #TODO-=-= image insertion test
         #photo=PhotoImage(file='testimg.gif')
         #self.textP = Text(root, height=20,width=20)
@@ -60,7 +55,7 @@ class InfoPage(Frame):
         #self.textP.image_create(END,image=photo)
         #self.textP.pack()
         
-        #TODO reference frame
+        #reference frame
         self.referenceFrame = Frame(self, width=200, height=500, highlightbackground="green", highlightthickness=1)
         self.referenceFrame.grid(row=1, column=3, sticky="nse")
         self.referenceFrame.pack_propagate(False)
@@ -68,13 +63,8 @@ class InfoPage(Frame):
         self.refScroll = Scrollbar(self.referenceFrame, command=self.innerText.yview)
         self.innerText.configure(yscrollcommand=self.refScroll.set)
         self.innerText.pack(side=LEFT)
-        #self.innerText.pack(side=LEFT, expand=YES, fill=BOTH)
         self.refScroll.pack(side=RIGHT, fill=Y)
         self.refScroll.config(command=self.innerText.yview)
-        for i in range(0,100):
-            b = Button(self.referenceFrame, text="button %d" % i)
-            self.innerText.window_create("end", window=b)
-            #self.innerText.insert("end", "\n")
         self.innerText.configure(state="disabled")       
         
         #self.grid_columnconfigure(4, weight=1)
@@ -88,20 +78,38 @@ class InfoPage(Frame):
         self.linkButton['state']='disabled'
         self.textArea.config(state=DISABLED)
         self.title.config(state=DISABLED)
-        self.tree.grid_remove()
         self.controller.showFrame(INFO)
     
     def onTreeClick(self, event):
         item = self.tree.selection()[0]
-        parent = self.tree.parent(item)
+        parentNode = self.tree.parent(item)
+        if parentNode == "INFO":
+            #creates link to another info page
+            self.innerText.configure(state="normal")
+            frameName = item + "_Info Page"
+            newButton = Button(self.referenceFrame, text=item, command=lambda:self.controller.showFrame(frameName))
+            self.innerText.window_create("end", window=newButton)
+            self.innerText.configure(state="disabled")
+        elif parentNode == "DIAG":
+            #TODO link to diag page
+            print "diag entry"
+            
+        elif parentNode == "MAP":
+            #TODO link to map page
+            print "map entry"
+            
+        else:
+            print "not found"
         
-        print item, " with parent ", self.tree.parent(item)
-        print "you clicked on", self.tree.item(item,"text")
-        
-    #TODO when item is selected, create a new button in page that will redirect to that frame
+    #when item is selected, create a new button in page that will redirect to that frame
     def link(self):
         #1. get all frames excepy select pages and start page
         #2. place under correct entry
+        treeWindow = Toplevel(self)
+        self.tree = ttk.Treeview(treeWindow)      
+        self.tree.bind("<Double-1>", self.onTreeClick)
+
+        
         self.tree.insert("","end", iid="DIAG", text="Diagrams")
         self.tree.insert("","end", iid="MAP", text= "Maps")
         self.tree.insert("","end", iid="INFO", text= "Info")
