@@ -14,7 +14,8 @@ class WorldBuild(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.container = Frame(self)
-        Tk.geometry(self,"1500x1000")  #TODO check resizing
+        w,h = Tk.winfo_screenwidth(self), Tk.winfo_screenheight(self)
+        Tk.geometry(self, "%dx%d+0+0" % (w,h))
         Tk.state(self,'zoomed')
         self.container.pack_propagate(0)
         self.container.pack(side="top", fill="both", expand=True)
@@ -26,6 +27,7 @@ class WorldBuild(Tk):
         #initialize different page types
         for f,t in zip((StartPage, SelectPage, SelectPage, SelectPage),(START,MAP,INFO,DIAG)):
             frame = f(self.container, self) if f==StartPage else f(self.container, self, t)
+            #frame.configure(background="white") #TODO color
             self.frames[t] = frame
             frame.grid(row=0, column=0, sticky="nsew")
         
