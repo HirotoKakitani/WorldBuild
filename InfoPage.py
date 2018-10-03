@@ -82,18 +82,15 @@ class InfoPage(Frame):
     #TODO show previous frame accessed. for now, just go back to select page of page type
     def returnPage(self):
         #disable edit functions
-        self.saveButton['state']='disabled'
-        self.linkButton['state']='disabled'
+        self.saveButton.config(state=DISABLED)
+        self.linkButton.config(state=DISABLED)
         self.textArea.config(state=DISABLED)
         self.title.config(state=DISABLED)
         self.controller.showFrame(INFO)
     
     #creates a reference button when an entry is selected from tree
     #TODO need to create button only when entry is clicked
-    #TODO need to prevent outside clicking when Toplevel is present
-    #TODO need to link button to refer to clicked entry
     def onTreeClick(self, event):
-        #--------------------
         # removes text in the selected area
         print "selection test"
         print SEL_FIRST
@@ -101,31 +98,34 @@ class InfoPage(Frame):
         i = self.textArea.index(SEL_FIRST)
         j = self.textArea.index(SEL_LAST)
         print i, j
-        #print self.textArea.delete(i,j)
-        #creates a button in place of text
-        buttonText = self.textArea.get(i,j)
-        self.textArea.delete(i,j)
-        testref = Button(self.textArea, text=buttonText)
-        self.textArea.window_create(i, window=testref)
-        #--------------------
         
         item = self.tree.selection()[0]
         parentNode = self.tree.parent(item)
         if parentNode == "INFO":
-            #creates link to another info page
+            #creates link to another info page on reference list
             self.innerText.configure(state="normal")
             frameName = item + "_Info Page"
             newButton = Button(self.referenceFrame, text=item, command=lambda:self.controller.showFrame(frameName))
             self.innerText.window_create("end", window=newButton)
             self.innerText.configure(state="disabled")
+        
+            #creates a button in place of text
+            buttonText = self.textArea.get(i,j)
+            self.textArea.delete(i,j)
+            refButton = Button(self.textArea, text=buttonText, command=lambda:self.controller.showFrame(frameName))
+            self.textArea.window_create(i, window=refButton)
+
+            self.treeWindow.destroy()
         elif parentNode == "DIAG":
             #TODO link to diag page
             print "diag entry"
             
+            self.treeWindow.destroy()
         elif parentNode == "MAP":
             #TODO link to map page
             print "map entry"
             
+            self.treeWindow.destroy()
         else:
             print "not found"
         
@@ -139,13 +139,15 @@ class InfoPage(Frame):
         except:
             print "Please select text"
             warningWindow = Toplevel(self)
+            warningWindow.grab_set()
             warningLabel = Label(warningWindow,text="\nNo text selected!\n")
             warningLabel.pack()  
 
         #get all frames except select pages and start page and place under correct entry
         else:
-            treeWindow = Toplevel(self)
-            self.tree = ttk.Treeview(treeWindow)      
+            self.treeWindow = Toplevel(self)
+            self.treeWindow.grab_set()
+            self.tree = ttk.Treeview(self.treeWindow)      
             self.tree.bind("<Double-1>", self.onTreeClick)
         
             self.tree.insert("","end", iid="DIAG", text="Diagrams")
@@ -170,8 +172,8 @@ class InfoPage(Frame):
         
     #activates text entry areas
     def edit(self):
-        self.saveButton['state']='normal'
-        self.linkButton['state']='normal'
+        self.saveButton.config(state='normal')#['state']='normal'
+        self.linkButton.config(state='normal')#['state']='normal'
         self.textArea.config(state=NORMAL)
         self.title.config(state=NORMAL)
 
@@ -179,6 +181,9 @@ class InfoPage(Frame):
         self.textArea.config(state=DISABLED)
         self.title.config(state=DISABLED)
         newTitle = self.title.get()
+
+        self.saveButton.config(state=DISABLED)
+        self.linkButton.config(state=DISABLED)
 
         if newTitle in self.nameHistory or not newTitle:
             print "Name has not changed"
